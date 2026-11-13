@@ -69,6 +69,8 @@ class VideoPipeline:
             self._threads.append(t)
 
     def stop(self) -> None:
+        if self._stop.is_set():
+            return
         self._stop.set()
         self._new_frame.set()
         for t in self._threads:
@@ -84,6 +86,10 @@ class VideoPipeline:
         return bool(ok)
 
     # ---- API pública
+    @property
+    def stopped(self) -> bool:
+        return self._stop.is_set()
+
     def set_zones(self, zones: list[Zone]) -> None:
         with self._lock:
             self.zones = zones
@@ -154,6 +160,8 @@ class VideoPipeline:
             try:
                 dets = detector.detect(frame)
             except Exception:
+                if self._stop.is_set():
+                    break
                 log.exception("Fallo de inferencia")
                 continue
             h, w = frame.shape[:2]

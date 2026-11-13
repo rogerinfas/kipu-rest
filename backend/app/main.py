@@ -1,4 +1,5 @@
 import asyncio
+import atexit
 import logging
 from contextlib import asynccontextmanager
 from typing import Callable
@@ -29,6 +30,9 @@ def create_app(
 ) -> FastAPI:
     settings = settings or Settings()
     pipeline = VideoPipeline(settings, detector_factory)
+    # Si el apagado del lifespan se cancela (clientes MJPEG abiertos), detener los hilos igual
+    # antes de que el intérprete finalice, para evitar abortos de OpenCV/torch.
+    atexit.register(pipeline.stop)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
@@ -67,7 +71,7 @@ def create_app(
     @app.get("/video")
     async def video():
         async def gen():
-            while True:
+            while not pipeline.stopped:
                 jpg = pipeline.latest_jpeg()
                 if jpg:
                     yield b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + jpg + b"\r\n"
@@ -82,7 +86,7 @@ def create_app(
             while True:
                 await ws.send_json(pipeline.state().model_dump())
                 await asyncio.sleep(WS_PERIOD_S)
-        except (WebSocketDisconnect, RuntimeError):
+        except (WebSocketDisconnect, RuntimeError, asyncio.CancelledError):
             pass
 
     if DIST.exists():

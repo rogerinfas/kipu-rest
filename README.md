@@ -91,3 +91,22 @@ Ingeniería, visión artificial y pasión por la gastronomía:
 - Desarrollo full-stack
 - Gestión gastronómica
 - UX/UI
+
+## Cómo correr la demo (MVP Live Vision)
+
+El MVP es un monitor en vivo del salón: YOLO detecta personas en un video del salón y el panel muestra qué mesas están ocupadas, cuánto tiempo llevan, las alertas de demora y una sugerencia de IA.
+
+- **Backend:** Python, FastAPI, Ultralytics YOLO y OpenCV (`backend/`).
+- **Frontend:** React, Vite, TanStack Router y Tailwind (`frontend/`).
+
+Inicio rápido:
+
+```bash
+cd backend && uv sync && uv run python ../scripts/check_env.py --prepare
+cd ../frontend && pnpm install && pnpm build
+cd .. && ./scripts/start.sh      # en Windows: scripts\start.bat
+```
+
+Abre http://localhost:5000. Para desarrollar el frontend: `pnpm dev` en `frontend/` (puerto 3001), con el backend corriendo en el 5000.
+
+La guía completa para la laptop de la feria está en [docs/instalacion-laptop-feria.md](docs/instalacion-laptop-feria.md).
