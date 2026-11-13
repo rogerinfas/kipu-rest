@@ -1,3 +1,9 @@
 descargas/
 backend/media/
 .env
+.superpowers/
+*.pt
+__pycache__/
+.venv/
+node_modules/
+frontend/dist/
