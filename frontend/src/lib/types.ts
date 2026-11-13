@@ -28,10 +28,10 @@ export interface Zone {
 }
 
 export const STATUS_COLOR: Record<Status, string> = {
-  LIBRE: '#6e7681',
-  ATENCION: '#f0b429',
-  OPTIMO: '#3fb950',
-  ALERTA: '#ff5c5c',
+  LIBRE: '#8A7B70',
+  ATENCION: '#E0A43A',
+  OPTIMO: '#6B8F4E',
+  ALERTA: '#D2452B',
 }
 
 export const STATUS_LABEL: Record<Status, string> = {

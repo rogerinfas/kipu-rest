@@ -30,11 +30,11 @@ export function VideoStage({ connected, children }: { connected: boolean; childr
         onError={() => setFailed(true)}
       />
       {(failed || !connected) && (
-        <div className="absolute inset-0 flex items-center justify-center text-xl text-[#9da7b3]">
+        <div className="absolute inset-0 flex items-center justify-center text-xl text-[#C4B2A0]">
           Conectando con la cámara…
         </div>
       )}
-      <span className="absolute bottom-3 left-4 rounded bg-black/60 px-2 py-1 text-sm text-[#9da7b3]">
+      <span className="absolute bottom-3 left-4 rounded bg-black/60 px-2 py-1 text-sm text-[#C4B2A0]">
         CAM-01 · YOLO en vivo · sin rostros
       </span>
       {children}

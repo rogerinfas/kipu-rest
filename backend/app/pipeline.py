@@ -18,12 +18,12 @@ log = logging.getLogger(__name__)
 STREAM_W = 1280  # ancho del MJPEG (ahorra CPU y ancho de banda)
 # BGR
 COLORS = {
-    "LIBRE": (129, 118, 110),
-    "ATENCION": (41, 180, 240),
-    "OPTIMO": (80, 185, 63),
-    "ALERTA": (92, 92, 255),
+    "LIBRE": (112, 123, 138),
+    "ATENCION": (58, 164, 224),
+    "OPTIMO": (78, 143, 107),
+    "ALERTA": (43, 69, 210),
 }
-PERSON_COLOR = (255, 166, 88)
+PERSON_COLOR = (221, 235, 245)
 
 
 class DetectorLike(Protocol):
@@ -215,6 +215,6 @@ class VideoPipeline:
             x, y = pts[:, 0].min(), pts[:, 1].min()
             (tw, th), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.55, 2)
             cv2.rectangle(img, (x, y - th - 8), (x + tw + 8, y), color, -1)
-            cv2.putText(img, label, (x + 4, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (17, 13, 13), 2, cv2.LINE_AA)
+            cv2.putText(img, label, (x + 4, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (22, 29, 43), 2, cv2.LINE_AA)
         ok, buf = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 80])
         return buf.tobytes() if ok else None

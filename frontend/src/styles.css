@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 
 @theme {
+  --color-terracota: #C0573E;
+  --color-ambar: #E0A43A;
+  --color-crema: #F5EBDD;
+  --color-espresso: #2B1D16;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
@@ -9,16 +13,16 @@ body,
 #root {
   margin: 0;
   height: 100%;
-  background: #0d1117;
+  background: #2B1D16;
 }
 
 @keyframes kipu-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgb(255 92 92 / 0.55);
+    box-shadow: 0 0 0 0 rgb(210 69 43 / 0.55);
   }
   50% {
-    box-shadow: 0 0 0 6px rgb(255 92 92 / 0);
+    box-shadow: 0 0 0 6px rgb(210 69 43 / 0);
   }
 }
 

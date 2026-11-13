@@ -91,33 +91,33 @@ function Calibrar() {
         >
           {zones.map((z) => (
             <g key={z.id}>
-              <polygon points={pts(z.polygon)} fill="#3fb95033" stroke="#3fb950" strokeWidth={0.25} />
-              <text x={z.polygon[0][0] * 100} y={z.polygon[0][1] * 100 - 0.8} fontSize={2.2} fill="#3fb950">
+              <polygon points={pts(z.polygon)} fill="#6B8F4E33" stroke="#6B8F4E" strokeWidth={0.25} />
+              <text x={z.polygon[0][0] * 100} y={z.polygon[0][1] * 100 - 0.8} fontSize={2.2} fill="#6B8F4E">
                 {z.name}
               </text>
             </g>
           ))}
           {draft.length > 0 && (
-            <polyline points={pts(draft)} fill="#f0b42933" stroke="#f0b429" strokeWidth={0.3} />
+            <polyline points={pts(draft)} fill="#E0A43A33" stroke="#E0A43A" strokeWidth={0.3} />
           )}
           {draft.map(([x, y], i) => (
-            <circle key={i} cx={x * 100} cy={y * 100} r={0.5} fill="#f0b429" />
+            <circle key={i} cx={x * 100} cy={y * 100} r={0.5} fill="#E0A43A" />
           ))}
         </svg>
       </div>
       <aside className="flex w-80 shrink-0 flex-col gap-3">
-        <h1 className="text-xl font-bold text-[#f0b429]">Calibrar mesas</h1>
-        <ol className="list-decimal space-y-1 pl-5 text-sm text-[#9da7b3]">
+        <h1 className="text-xl font-bold text-[#E0A43A]">Calibrar mesas</h1>
+        <ol className="list-decimal space-y-1 pl-5 text-sm text-[#C4B2A0]">
           <li>Haz clic alrededor de cada mesa, <b>incluyendo sus sillas</b>.</li>
           <li><kbd>Enter</kbd> cierra la mesa · <kbd>Retroceso</kbd> borra el último punto.</li>
           <li><kbd>Esc</kbd> cancela el dibujo o vuelve a la demo.</li>
         </ol>
         <ul className="flex-1 space-y-1 overflow-auto">
           {zones.map((z) => (
-            <li key={z.id} className="flex items-center justify-between rounded bg-[#161b22] px-3 py-1">
+            <li key={z.id} className="flex items-center justify-between rounded bg-[#3A2A21] px-3 py-1">
               <span>{z.name}</span>
               <button
-                className="text-sm text-[#ff5c5c] hover:underline"
+                className="text-sm text-[#D2452B] hover:underline"
                 onClick={() => setZones(zones.filter((x) => x.id !== z.id))}
               >
                 borrar
@@ -125,18 +125,18 @@ function Calibrar() {
             </li>
           ))}
         </ul>
-        {msg && <p className="text-sm text-[#f0b429]">{msg}</p>}
+        {msg && <p className="text-sm text-[#E0A43A]">{msg}</p>}
         <div className="grid grid-cols-2 gap-2">
-          <button className="rounded bg-[#3fb950] px-3 py-2 font-semibold text-black" onClick={save}>
+          <button className="rounded bg-[#6B8F4E] px-3 py-2 font-semibold text-black" onClick={save}>
             Guardar
           </button>
-          <button className="rounded bg-[#30363d] px-3 py-2" onClick={load}>
+          <button className="rounded bg-[#4A372C] px-3 py-2" onClick={load}>
             Cargar
           </button>
-          <button className="rounded bg-[#30363d] px-3 py-2" onClick={() => setFrameKey(Date.now())}>
+          <button className="rounded bg-[#4A372C] px-3 py-2" onClick={() => setFrameKey(Date.now())}>
             Otro frame
           </button>
-          <button className="rounded bg-[#30363d] px-3 py-2" onClick={() => navigate({ to: '/' })}>
+          <button className="rounded bg-[#4A372C] px-3 py-2" onClick={() => navigate({ to: '/' })}>
             Volver
           </button>
         </div>
