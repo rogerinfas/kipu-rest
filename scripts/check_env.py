@@ -37,6 +37,8 @@ def main() -> int:
             report(OK, f"GPU CUDA: {torch.cuda.get_device_name(0)} (torch {torch.__version__})")
         else:
             report(WARN, f"Sin CUDA: se usará la CPU (torch {torch.__version__})", critical=False)
+            print("        Revisa `nvidia-smi` y el driver (Linux: >= 580; Windows: >= 560).")
+            print("        Si no hay GPU, baja la resolución de inferencia: KIPU_IMGSZ=640")
     except Exception as e:  # noqa: BLE001
         report(FAIL, f"torch no se puede importar: {e}")
 

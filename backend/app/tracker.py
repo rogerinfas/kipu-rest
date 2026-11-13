@@ -1,11 +1,15 @@
 """Lógica pura de estados de mesa. Sin I/O: recibe detecciones y un reloj."""
 
+from collections import deque
 from dataclasses import dataclass, field
 
 from app.config import Settings
 from app.geometry import foot_point, point_in_polygon
 from app.models import Detection, SalonState, TableState, Zone
 from app.simulation import TableScript, table_seed
+
+ENTRY_GRACE_S = 0.5  # huecos de detección tolerados mientras se confirma la ocupación
+PEOPLE_WINDOW_S = 1.0  # el conteo mostrado es el máximo del último segundo
 
 STAGE_NOTE = {
     "sentados": "Comensales recién sentados",
@@ -18,6 +22,8 @@ class _Table:
     zone: Zone
     occupied: bool = False
     people: int = 0
+    counts: deque = field(default_factory=deque)
+    last_seen: float | None = None
     presence_since: float | None = None
     absence_since: float | None = None
     occupied_at: float = 0.0
@@ -28,7 +34,9 @@ class _Table:
         self.occupied = False
         self.presence_since = None
         self.absence_since = None
+        self.last_seen = None
         self.script = None
+        self.counts.clear()
 
 
 @dataclass
@@ -46,10 +54,17 @@ class SalonTracker:
         feet = [foot_point(d, w, h) for d in dets]
         s = self.settings
         for t in self._tables:
-            t.people = sum(1 for p in feet if point_in_polygon(p, t.zone.polygon))
+            raw = sum(1 for p in feet if point_in_polygon(p, t.zone.polygon))
+            t.counts.append((now, raw))
+            while t.counts and now - t.counts[0][0] > PEOPLE_WINDOW_S:
+                t.counts.popleft()
+            t.people = max(c for _, c in t.counts)
+            if raw > 0:
+                t.last_seen = now
             if not t.occupied:
-                if t.people == 0:
-                    t.presence_since = None
+                if raw == 0:
+                    if t.last_seen is None or now - t.last_seen > ENTRY_GRACE_S:
+                        t.presence_since = None
                     continue
                 if t.presence_since is None:
                     t.presence_since = now
@@ -60,7 +75,7 @@ class SalonTracker:
                     t.occupations += 1
                     t.script = TableScript(table_seed(t.zone.id, t.occupations))
                 continue
-            if t.people > 0:
+            if raw > 0:
                 t.absence_since = None
                 continue
             if t.absence_since is None:

@@ -121,15 +121,26 @@ class VideoPipeline:
         period = 1.0 / fps
         nxt = time.monotonic()
         last_reset = nxt
+        fails = 0
         while not self._stop.is_set():
             ok, frame = cap.read()
             if not ok:
+                fails += 1
+                if fails > 1:
+                    # el rebobinado no funcionó (pasa con algunos backends en Windows): reabrir
+                    if fails % 50 == 0:
+                        log.warning("No se puede leer el video tras %d intentos", fails)
+                    cap.release()
+                    time.sleep(period)
+                    cap = cv2.VideoCapture(str(self.settings.video_path))
+                    continue
                 cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 if time.monotonic() - last_reset >= self.settings.cycle_s:
                     last_reset = time.monotonic()
                     with self._lock:
                         self._tracker.reset_tables(now=last_reset, close_occupied=True)
                 continue
+            fails = 0
             self._frame = frame
             self._new_frame.set()
             self._jpeg = self._annotate(frame)

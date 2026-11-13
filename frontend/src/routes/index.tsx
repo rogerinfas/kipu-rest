@@ -28,7 +28,7 @@ function Demo() {
     <div className="flex h-full flex-col">
       <TopBar state={state} connected={connected} />
       <main className="min-h-0 flex-1 px-6">
-        <VideoStage>
+        <VideoStage connected={connected}>
           {state && (
             <div className="absolute right-4 bottom-4">
               <AiHint hint={state.hint} />

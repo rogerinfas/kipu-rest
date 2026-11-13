@@ -7,7 +7,8 @@ Haz todo esto **antes** de la feria y **con internet**. El día del evento no ha
 1. **Driver de NVIDIA** actualizado:
    - Windows: GeForce Experience o https://www.nvidia.com/drivers (versión 560 o superior).
    - Linux: driver propietario 580 o superior. En Arch: `sudo pacman -S nvidia nvidia-utils`; en Ubuntu: `sudo ubuntu-drivers install`.
-   - Compruébalo con `nvidia-smi`: debe mostrar la GTX 1650.
+   - Compruébalo con `nvidia-smi`: debe mostrar la GTX 1650 y, arriba a la derecha, la versión del driver.
+   - **Importante en Linux:** el torch que se instala necesita CUDA 13, es decir, un driver **580 o superior**. Con un driver más viejo, la detección cae a la CPU sin error (solo un `[AVISO]` en `check_env`) y va mucho más lenta.
 2. **uv** (gestor de Python):
    - Windows (PowerShell): `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
    - Linux: `curl -LsSf https://astral.sh/uv/install.sh | sh`

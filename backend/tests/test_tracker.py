@@ -117,3 +117,22 @@ def test_cycle_reset_counts_occupied_as_rotations():
     assert s.rotations == 1
     assert s.avg_occupancy_s == pytest.approx(10 * 20, abs=20 * 0.3)
     assert s.tables[0].status == "LIBRE"
+
+
+def test_intermittent_entry_still_occupies():
+    # YOLO pierde a la persona 1 de cada 5 frames: igual debe ocuparse a los ~2 s
+    tr = make()
+    t, i = 0.0, 0
+    while t <= 2.5:
+        tr.update([] if i % 5 == 4 else [person_in_zone1()], W, H, t)
+        t += 0.1
+        i += 1
+    assert table(tr, 2.5).status == "ATENCION"
+
+
+def test_people_count_is_smoothed():
+    tr = make()
+    two = [person_in_zone1(), person_in_zone1()]
+    run(tr, two, 0, 3.0)
+    tr.update([person_in_zone1()], W, H, 3.1)
+    assert table(tr, 3.1).people == 2
