@@ -114,12 +114,15 @@ class VideoPipeline:
         fps = cap.get(cv2.CAP_PROP_FPS) or 24.0
         period = 1.0 / fps
         nxt = time.monotonic()
+        last_reset = nxt
         while not self._stop.is_set():
             ok, frame = cap.read()
             if not ok:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-                with self._lock:
-                    self._tracker.reset_tables()
+                if time.monotonic() - last_reset >= self.settings.cycle_s:
+                    last_reset = time.monotonic()
+                    with self._lock:
+                        self._tracker.reset_tables(now=last_reset, close_occupied=True)
                 continue
             self._frame = frame
             self._new_frame.set()

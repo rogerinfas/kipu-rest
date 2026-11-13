@@ -25,4 +25,6 @@ class Settings:
     attention_min: float = field(default_factory=lambda: float(_env("ATTENTION_MIN", "3")))
     conf: float = field(default_factory=lambda: float(_env("CONF", "0.35")))
     imgsz: int = field(default_factory=lambda: int(_env("IMGSZ", "960")))
+    # reinicia las mesas en el primer fin de bucle tras este tiempo real (0 = en cada vuelta)
+    cycle_s: float = field(default_factory=lambda: float(_env("CYCLE_S", "75")))
     port: int = field(default_factory=lambda: int(_env("PORT", "5000")))

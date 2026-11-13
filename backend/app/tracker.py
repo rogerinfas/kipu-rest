@@ -70,8 +70,12 @@ class SalonTracker:
                 self._durations.append((t.absence_since - t.occupied_at) * s.time_factor)
                 t.free()
 
-    def reset_tables(self) -> None:
+    def reset_tables(self, now: float | None = None, close_occupied: bool = False) -> None:
+        """Libera todas las mesas. Con close_occupied, cuenta las ocupadas como rotaciones."""
         for t in self._tables:
+            if close_occupied and t.occupied and now is not None:
+                self._rotations += 1
+                self._durations.append((now - t.occupied_at) * self.settings.time_factor)
             t.free()
             t.people = 0
 

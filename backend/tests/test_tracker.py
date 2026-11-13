@@ -106,3 +106,14 @@ def test_no_zones_is_safe():
     tr.update([person_in_zone1()], W, H, 1.0)
     s = tr.snapshot(1.0)
     assert s.tables == [] and s.occupancy_pct == 0
+
+
+def test_cycle_reset_counts_occupied_as_rotations():
+    tr = make()
+    run(tr, [person_in_zone1()], 0, 2.0)
+    run(tr, [person_in_zone1()], 2.1, 12.0)
+    tr.reset_tables(now=12.0, close_occupied=True)
+    s = tr.snapshot(12.0)
+    assert s.rotations == 1
+    assert s.avg_occupancy_s == pytest.approx(10 * 20, abs=20 * 0.3)
+    assert s.tables[0].status == "LIBRE"
